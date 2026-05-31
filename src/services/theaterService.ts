@@ -20,6 +20,6 @@ export async function fetchTheaters(): Promise<Theater[]> {
     id: row.id as string,
     title: row.title as string,
     date: row.date as string,
-    content: row.content as string,
+    content: ((row.content as string) || '').replace(/\\n/g, '\n'),
   }))
 }
