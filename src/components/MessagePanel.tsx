@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { Message } from '../types'
 
 interface MessagePanelProps {
@@ -10,6 +10,13 @@ export default function MessagePanel({ messages, onAdd }: MessagePanelProps) {
   const [name, setName] = useState('')
   const [content, setContent] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const submitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (submitTimerRef.current) clearTimeout(submitTimerRef.current)
+    }
+  }, [])
 
   const handleSubmit = () => {
     if (!content.trim()) return
@@ -17,7 +24,8 @@ export default function MessagePanel({ messages, onAdd }: MessagePanelProps) {
     setName('')
     setContent('')
     setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 2000)
+    if (submitTimerRef.current) clearTimeout(submitTimerRef.current)
+    submitTimerRef.current = setTimeout(() => setSubmitted(false), 2000)
   }
 
   return (

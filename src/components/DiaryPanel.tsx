@@ -1,38 +1,22 @@
 import { useState, useMemo, useEffect } from 'react'
 import { fetchDiaries } from '../services/diaryService'
+import { FURNITURE_NAMES } from '../data/furniture'
 import type { Diary } from '../types'
 
 interface DiaryPanelProps {
   filterObject?: string
 }
 
-const FURNITURE_NAMES: Record<string, string> = {
-  sofa: '沙发',
-  dining_table: '餐桌',
-  fridge: '冰箱',
-  stove: '灶台',
-  bed: '双人床',
-  desk: '书桌',
-  chair: '椅子',
-  washing_machine: '洗衣机',
-  bathtub: '浴缸',
-  toilet: '马桶',
-  message_wall: '留言墙',
-  coffee_table: '茶几',
-  tv: '电视',
-  wardrobe: '衣柜',
-  computer: '电脑',
-  shoe_cabinet: '鞋柜',
-  plant: '绿植',
-}
-
 export default function DiaryPanel({ filterObject }: DiaryPanelProps) {
   const [diaries, setDiaries] = useState<Diary[]>([])
+  const [loading, setLoading] = useState(true)
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchDiaries().then(setDiaries)
+    fetchDiaries()
+      .then(setDiaries)
+      .finally(() => setLoading(false))
   }, [])
 
   const allTags = useMemo(
@@ -93,9 +77,21 @@ export default function DiaryPanel({ filterObject }: DiaryPanelProps) {
       </div>
 
       <div className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
-        {filtered.length === 0 && (
+        {loading && (
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-amber-50/30 rounded-xl p-4 animate-pulse">
+                <div className="h-4 bg-amber-100 rounded w-1/2 mb-2" />
+                <div className="h-3 bg-amber-50 rounded w-1/3" />
+              </div>
+            ))}
+          </div>
+        )}
+        {!loading && filtered.length === 0 && (
           <p className="text-sm text-gray-400 text-center py-8">
-            暂无相关日记
+            {selectedTag || filterObject
+              ? '暂无相关日记，试试清除筛选条件'
+              : '还没有日记'}
           </p>
         )}
         {filtered.map((diary) => (

@@ -340,7 +340,9 @@ export function useRandomWalk(
     navigateToPosition(targetPos, doLocalWander)
   }, [navigateToPosition, doLocalWander])
 
-  startCycleRef.current = startRoomTour
+  useEffect(() => {
+    startCycleRef.current = startRoomTour
+  }, [startRoomTour])
 
   useEffect(() => {
     const runId = newRunId()

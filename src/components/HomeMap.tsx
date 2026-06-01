@@ -93,8 +93,8 @@ export default function HomeMap({ onFurnitureClick }: HomeMapProps) {
   const boyWalk = useRandomWalk(FURNITURE_DATA, BOY_START, true, boyCallbacks)
   const girlWalk = useRandomWalk(FURNITURE_DATA, GIRL_START, false, girlCallbacks)
 
-  boyRef.current = boyWalk
-  girlRef.current = girlWalk
+  useEffect(() => { boyRef.current = boyWalk }, [boyWalk])
+  useEffect(() => { girlRef.current = girlWalk }, [girlWalk])
 
   useEffect(() => {
     boyWalk.setOtherPosition(girlWalk.position)

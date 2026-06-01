@@ -1,4 +1,19 @@
+import { useState, useEffect } from 'react'
+import { ANNIVERSARY_DATE } from '../config'
+
+function getDaysCount(): number {
+  return Math.floor(
+    (Date.now() - new Date(ANNIVERSARY_DATE).getTime()) / (1000 * 60 * 60 * 24)
+  )
+}
+
 export default function AboutPanel() {
+  const [days, setDays] = useState(getDaysCount)
+
+  useEffect(() => {
+    const timer = setInterval(() => setDays(getDaysCount()), 60_000)
+    return () => clearInterval(timer)
+  }, [])
   return (
     <div className="animate-fade-in-up p-1">
       <h2 className="text-xl font-bold text-rose-700 mb-4">
@@ -21,7 +36,7 @@ export default function AboutPanel() {
         </p>
         <div className="mt-6 p-4 bg-rose-50 rounded-2xl border border-rose-100">
           <p className="text-rose-600 text-xs">
-            🌸 我们在一起的第 {Math.floor((Date.now() - new Date('2022-03-24').getTime()) / (1000 * 60 * 60 * 24))} 天。
+            🌸 我们在一起的第 {days} 天。
             每一天都很珍贵。
           </p>
         </div>

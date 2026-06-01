@@ -7,8 +7,8 @@ interface TopNavProps {
 
 const NAV_ITEMS: { mode: DrawerMode; label: string; icon: string }[] = [
   { mode: 'theater', label: '小剧场', icon: '🎭' },
-  { mode: 'diary', label: '回忆', icon: '📔' },
-  { mode: 'messages', label: '留言', icon: '💌' },
+  { mode: 'diary', label: '恋爱日记', icon: '📖' },
+  { mode: 'messages', label: '留言板', icon: '💌' },
   { mode: 'about', label: '关于我们', icon: '💕' },
 ]
 

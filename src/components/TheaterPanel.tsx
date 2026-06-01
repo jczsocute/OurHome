@@ -27,7 +27,15 @@ export default function TheaterPanel() {
     return (
       <div className="animate-fade-in-up p-1">
         <h2 className="text-xl font-bold text-purple-700 mb-4">🎭 小剧场</h2>
-        <p className="text-sm text-gray-400 text-center py-8">加载中...</p>
+        <div className="bg-purple-50/30 rounded-2xl p-5 animate-pulse">
+          <div className="h-5 bg-purple-100 rounded w-2/3 mb-3" />
+          <div className="h-3 bg-purple-50 rounded w-1/3 mb-4" />
+          <div className="space-y-2">
+            <div className="h-3 bg-purple-50 rounded" />
+            <div className="h-3 bg-purple-50 rounded w-5/6" />
+            <div className="h-3 bg-purple-50 rounded w-4/6" />
+          </div>
+        </div>
       </div>
     )
   }
