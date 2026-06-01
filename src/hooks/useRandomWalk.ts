@@ -7,7 +7,7 @@ import type { RoomData } from '../data/rooms'
 
 const MAP_WIDTH = 100
 const MAP_HEIGHT = 100
-const STEP_SIZE = 3
+const STEP_SIZE = 2
 const MOVE_INTERVAL = 3000
 const PAUSE_DURATION = 3000
 const FURNITURE_INTERACT_DURATION = 5000
@@ -91,8 +91,12 @@ export function useRandomWalk(
   const [bubbleText, setBubbleText] = useState('')
   const [isWalking, setIsWalking] = useState(false)
   const [isFurnitureInteraction, setIsFurnitureInteraction] = useState(false)
+  const [activeTimerCount, setActiveTimerCount] = useState(0)
+
+  const runIdRef = useRef(0)
   const moveTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const activeTimerCountRef = useRef(0)
+
   const positionRef = useRef(position)
   const otherPositionRef = useRef<CharacterPosition>({ x: 50, y: 50 })
   const furnitureRef = useRef(furniture)
@@ -105,14 +109,47 @@ export function useRandomWalk(
   furnitureRef.current = furniture
   callbacksRef.current = callbacks
 
+  function trackTimer<T extends ReturnType<typeof setTimeout> | ReturnType<typeof setInterval>>(
+    timer: T | null
+  ): T | null {
+    if (timer) {
+      activeTimerCountRef.current++
+      setActiveTimerCount(activeTimerCountRef.current)
+    }
+    return timer
+  }
+
+  function untrackTimer<T extends ReturnType<typeof setTimeout> | ReturnType<typeof setInterval>>(
+    timer: T | null
+  ): void {
+    if (timer) {
+      activeTimerCountRef.current = Math.max(0, activeTimerCountRef.current - 1)
+      setActiveTimerCount(activeTimerCountRef.current)
+    }
+  }
+
+  function newRunId(): number {
+    return ++runIdRef.current
+  }
+
+  function isValidRun(expectedId: number): boolean {
+    return runIdRef.current === expectedId
+  }
+
+  function scheduleTimeout(cb: () => void, delay: number): ReturnType<typeof setTimeout> {
+    const id = setTimeout(() => {
+      untrackTimer(id)
+      cb()
+    }, delay)
+    trackTimer(id)
+    return id
+  }
+
   const clearAllTimers = useCallback(() => {
     if (moveTimerRef.current) {
       clearInterval(moveTimerRef.current)
+      untrackTimer(moveTimerRef.current)
       moveTimerRef.current = null
-    }
-    if (pauseTimerRef.current) {
-      clearTimeout(pauseTimerRef.current)
-      pauseTimerRef.current = null
     }
   }, [])
 
@@ -121,37 +158,47 @@ export function useRandomWalk(
   const navigateToPosition = useCallback(
     (targetPos: CharacterPosition, onReach: () => void) => {
       clearAllTimers()
+      const runId = newRunId()
       setShowBubble(false)
       setIsFurnitureInteraction(false)
       setIsWalking(true)
       isBusyRef.current = true
 
-      moveTimerRef.current = setInterval(() => {
-        setPosition((prev) => {
-          const dx = targetPos.x - prev.x
-          const dy = targetPos.y - prev.y
-          const dist = Math.sqrt(dx * dx + dy * dy)
+      moveTimerRef.current = trackTimer(
+        setInterval(() => {
+          if (!isValidRun(runId)) return
 
-          if (dist < TARGET_REACH_THRESHOLD) {
-            if (moveTimerRef.current) {
-              clearInterval(moveTimerRef.current)
-              moveTimerRef.current = null
+          setPosition((prev) => {
+            const dx = targetPos.x - prev.x
+            const dy = targetPos.y - prev.y
+            const dist = Math.sqrt(dx * dx + dy * dy)
+
+            if (dist < TARGET_REACH_THRESHOLD) {
+              if (moveTimerRef.current && isValidRun(runId)) {
+                clearInterval(moveTimerRef.current)
+                untrackTimer(moveTimerRef.current)
+                moveTimerRef.current = null
+              }
+              setIsWalking(false)
+
+              scheduleTimeout(() => {
+                if (!isValidRun(runId)) return
+                onReach()
+              }, 300)
+              return prev
             }
-            setIsWalking(false)
-            setTimeout(onReach, 300)
+
+            const step = Math.min(TARGET_STEP_SIZE, dist)
+            const newX = prev.x + (dx / dist) * step
+            const newY = prev.y + (dy / dist) * step
+
+            if (isInBounds(newX, newY)) {
+              return { x: newX, y: newY }
+            }
             return prev
-          }
-
-          const step = Math.min(TARGET_STEP_SIZE, dist)
-          const newX = prev.x + (dx / dist) * step
-          const newY = prev.y + (dy / dist) * step
-
-          if (isInBounds(newX, newY)) {
-            return { x: newX, y: newY }
-          }
-          return prev
-        })
-      }, TARGET_MOVE_INTERVAL)
+          })
+        }, TARGET_MOVE_INTERVAL)
+      )
     },
     [clearAllTimers]
   )
@@ -171,6 +218,7 @@ export function useRandomWalk(
   }, [])
 
   const doNormalBubble = useCallback(() => {
+    const runId = newRunId()
     const pos = positionRef.current
     const distToOther = distance(pos, otherPositionRef.current)
 
@@ -185,11 +233,15 @@ export function useRandomWalk(
     setIsFurnitureInteraction(false)
     isBusyRef.current = true
 
-    pauseTimerRef.current = setTimeout(resumeCycle, PAUSE_DURATION)
+    scheduleTimeout(() => {
+      if (!isValidRun(runId)) return
+      resumeCycle()
+    }, PAUSE_DURATION)
   }, [isBoy, resumeCycle])
 
   const doFurnitureInteraction = useCallback(
     (nearF: FurnitureItem, skipCooldown = false) => {
+      const runId = newRunId()
       const phrase = getFurniturePhrase(nearF, isBoy)
       setBubbleText(phrase)
       setShowBubble(true)
@@ -199,7 +251,10 @@ export function useRandomWalk(
         lastInteractTimeRef.current = Date.now()
       }
 
-      pauseTimerRef.current = setTimeout(resumeCycle, FURNITURE_INTERACT_DURATION)
+      scheduleTimeout(() => {
+        if (!isValidRun(runId)) return
+        resumeCycle()
+      }, FURNITURE_INTERACT_DURATION)
     },
     [isBoy, resumeCycle]
   )
@@ -208,42 +263,54 @@ export function useRandomWalk(
     (targetPos: CharacterPosition, phrase: string) => {
       clearAllTimers()
       navigateToPosition(targetPos, () => {
+        const runId = newRunId()
         setBubbleText(phrase)
         setShowBubble(true)
         setIsFurnitureInteraction(true)
         isBusyRef.current = true
         lastInteractTimeRef.current = Date.now()
 
-        pauseTimerRef.current = setTimeout(resumeCycle, COUPLE_INTERACT_DURATION)
+        scheduleTimeout(() => {
+          if (!isValidRun(runId)) return
+          resumeCycle()
+        }, COUPLE_INTERACT_DURATION)
       })
     },
     [clearAllTimers, navigateToPosition, resumeCycle]
   )
 
   const doLocalWander = useCallback(() => {
+    const runId = newRunId()
     const currentFurniture = furnitureRef.current
 
-    moveTimerRef.current = setInterval(() => {
-      setPosition((prev) => {
-        const angles = [0, 45, 90, 135, 180, 225, 270, 315]
-        const angle = getRandomItem(angles)
-        const rad = (angle * Math.PI) / 180
-        const newX = prev.x + Math.cos(rad) * STEP_SIZE
-        const newY = prev.y + Math.sin(rad) * STEP_SIZE
+    moveTimerRef.current = trackTimer(
+      setInterval(() => {
+        if (!isValidRun(runId)) return
 
-        if (isInBounds(newX, newY)) {
-          return { x: newX, y: newY }
-        }
-        return prev
-      })
-    }, MOVE_INTERVAL)
+        setPosition((prev) => {
+          const angles = [0, 45, 90, 135, 180, 225, 270, 315]
+          const angle = getRandomItem(angles)
+          const rad = (angle * Math.PI) / 180
+          const newX = prev.x + Math.cos(rad) * STEP_SIZE
+          const newY = prev.y + Math.sin(rad) * STEP_SIZE
+
+          if (isInBounds(newX, newY)) {
+            return { x: newX, y: newY }
+          }
+          return prev
+        })
+      }, MOVE_INTERVAL)
+    )
 
     setIsWalking(true)
     setIsFurnitureInteraction(false)
 
-    pauseTimerRef.current = setTimeout(() => {
+    scheduleTimeout(() => {
+      if (!isValidRun(runId)) return
+
       if (moveTimerRef.current) {
         clearInterval(moveTimerRef.current)
+        untrackTimer(moveTimerRef.current)
         moveTimerRef.current = null
       }
       setIsWalking(false)
@@ -276,15 +343,25 @@ export function useRandomWalk(
   startCycleRef.current = startRoomTour
 
   useEffect(() => {
+    const runId = newRunId()
     const initDelay = Math.random() * 2000
-    const initTimer = setTimeout(() => {
-      startRoomTour()
-    }, initDelay)
+    const initTimer = trackTimer(
+      setTimeout(() => {
+        untrackTimer(initTimer)
+        if (!isValidRun(runId)) return
+        startRoomTour()
+      }, initDelay)
+    )
 
     return () => {
-      clearTimeout(initTimer)
-      if (moveTimerRef.current) clearInterval(moveTimerRef.current)
-      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current)
+      if (initTimer) {
+        clearTimeout(initTimer)
+        untrackTimer(initTimer)
+      }
+      if (moveTimerRef.current) {
+        clearInterval(moveTimerRef.current)
+        untrackTimer(moveTimerRef.current)
+      }
     }
   }, [startRoomTour])
 
@@ -303,5 +380,6 @@ export function useRandomWalk(
     doFurnitureInteraction,
     doCoupleInteraction,
     isBusy,
+    activeTimerCount,
   }
 }

@@ -28,14 +28,14 @@ export default function Furniture({ item, onClick, interactive }: FurnitureProps
         top: `${item.y}%`,
         width: `${item.width}%`,
         height: `${item.height}%`,
-        minWidth: '32px',
-        minHeight: '32px',
+        minWidth: '22px',
+        minHeight: '22px',
       }}
       onClick={() => interactive && onClick?.(item.id)}
       title={interactive ? item.name : undefined}
     >
-      <span className="text-2xl leading-none">{item.emoji}</span>
-      <span className="text-[10px] text-gray-500 mt-0.5 leading-tight hidden sm:block">
+      <span className="text-base leading-none">{item.emoji}</span>
+      <span className="text-[8px] text-gray-400 mt-0.5 leading-tight hidden sm:block">
         {item.name}
       </span>
     </div>

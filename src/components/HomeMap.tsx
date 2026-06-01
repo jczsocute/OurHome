@@ -39,6 +39,18 @@ export default function HomeMap({ onFurnitureClick }: HomeMapProps) {
 
   const [selectedBoy, setSelectedBoy] = useState(false)
   const [selectedGirl, setSelectedGirl] = useState(false)
+  const [debugMode, setDebugMode] = useState(false)
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'd' && e.ctrlKey) {
+        e.preventDefault()
+        setDebugMode((prev) => !prev)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   const tryCoupleInteraction = useCallback(
     (furniture: FurnitureItem, initiatorIsBoy: boolean): boolean => {
@@ -242,6 +254,35 @@ export default function HomeMap({ onFurnitureClick }: HomeMapProps) {
         onClick={() => handleCharacterClick(false)}
       />
 
+      {debugMode && (
+        <>
+          <div
+            className="absolute z-40 pointer-events-none select-none"
+            style={{
+              left: `${boyWalk.position.x}%`,
+              top: `${boyWalk.position.y}%`,
+              transform: 'translate(-50%, -50%) translateY(-18px)',
+            }}
+          >
+            <span className="text-[10px] font-mono bg-black/70 text-green-400 px-1.5 py-0.5 rounded">
+              定时器:{boyWalk.activeTimerCount}
+            </span>
+          </div>
+          <div
+            className="absolute z-40 pointer-events-none select-none"
+            style={{
+              left: `${girlWalk.position.x}%`,
+              top: `${girlWalk.position.y}%`,
+              transform: 'translate(-50%, -50%) translateY(-18px)',
+            }}
+          >
+            <span className="text-[10px] font-mono bg-black/70 text-pink-300 px-1.5 py-0.5 rounded">
+              定时器:{girlWalk.activeTimerCount}
+            </span>
+          </div>
+        </>
+      )}
+
       {showHeart && (
         <HeartAnimation
           x={(boyPos.x + girlPos.x) / 2}
@@ -254,6 +295,18 @@ export default function HomeMap({ onFurnitureClick }: HomeMapProps) {
         {selectedBoy || selectedGirl
           ? '✨ 已选中人物 · 点击家具让 Ta 走过去'
           : '✨ 点击家具查看回忆 · 点击小人可以选中'}
+      </div>
+      <div className="absolute bottom-4 right-4 text-[10px] text-gray-400 select-none">
+        {debugMode ? (
+          <button
+            onClick={() => setDebugMode(false)}
+            className="bg-black/60 text-green-400 px-2 py-1 rounded font-mono hover:bg-black/80 cursor-pointer"
+          >
+            调试:ON · 点击关闭
+          </button>
+        ) : (
+          <span className="opacity-40">Ctrl+D 调试模式</span>
+        )}
       </div>
     </div>
   )

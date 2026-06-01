@@ -78,7 +78,7 @@ export default function App() {
         activeMode={drawer.open ? drawer.mode : null}
       />
 
-      <div className="w-full h-full pt-12 pb-1 px-1 sm:pt-14 sm:pb-2 sm:px-2">
+      <div className="w-full h-full pt-14 pb-1 px-1 sm:pt-16 sm:pb-2 sm:px-2">
         <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-white/20">
           <HomeMap
             onFurnitureClick={handleFurnitureClick}

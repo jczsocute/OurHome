@@ -16,8 +16,14 @@ const FURNITURE_NAMES: Record<string, string> = {
   chair: '椅子',
   washing_machine: '洗衣机',
   bathtub: '浴缸',
+  toilet: '马桶',
   message_wall: '留言墙',
   coffee_table: '茶几',
+  tv: '电视',
+  wardrobe: '衣柜',
+  computer: '电脑',
+  shoe_cabinet: '鞋柜',
+  plant: '绿植',
 }
 
 export default function DiaryPanel({ filterObject }: DiaryPanelProps) {
