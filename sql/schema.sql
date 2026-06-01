@@ -48,11 +48,9 @@ ALTER TABLE theaters ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public diaries are viewable by everyone" ON diaries
   FOR SELECT USING (visibility = 'public');
 
--- 留言：仅已审核的留言可读，任何人可插入（待审核）
+-- 留言：仅已审核的留言可读，写入通过 Netlify Function（使用 service_role key，绕过 RLS）
 CREATE POLICY "Approved messages are viewable by everyone" ON messages
   FOR SELECT USING (status = 'approved');
-CREATE POLICY "Anyone can insert messages" ON messages
-  FOR INSERT WITH CHECK (true);
 
 -- 小剧场：所有人可读
 CREATE POLICY "Theaters are viewable by everyone" ON theaters
