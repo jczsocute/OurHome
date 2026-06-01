@@ -90,7 +90,7 @@ export default async function handler(req: Request): Promise<Response> {
 
   const { data, error } = await supabase
     .from('messages')
-    .insert({ name: name || '匿名', content })
+    .insert({ name: name || '匿名', content, status: 'approved' })
     .select('id, name, content, created_at')
     .single()
 

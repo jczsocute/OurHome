@@ -14,23 +14,25 @@ const NAV_ITEMS: { mode: DrawerMode; label: string; icon: string }[] = [
 
 export default function TopNav({ onNavigate, activeMode }: TopNavProps) {
   return (
-    <nav className="absolute top-0 left-0 right-0 z-50 flex items-center px-4 py-3 gap-2.5 overflow-x-auto scrollbar-none">
-      <span className="text-lg mr-1 shrink-0">🏠</span>
-      {NAV_ITEMS.map((item) => (
-        <button
-          key={item.mode}
-          onClick={() => onNavigate(item.mode)}
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200 cursor-pointer
-            backdrop-blur-sm
-            ${activeMode === item.mode
-              ? 'bg-white/70 text-rose-700 shadow-md'
-              : 'bg-white/30 text-stone-600 hover:text-rose-600 hover:bg-white/50 hover:shadow-sm'
-            }`}
-        >
-          <span className="inline mr-0.5">{item.icon}</span>
-          {item.label}
-        </button>
-      ))}
+    <nav className="absolute top-0 left-0 right-0 z-50 flex items-center px-4 py-3">
+      <span className="text-lg mr-2 shrink-0">🏠</span>
+      <div className="flex items-center gap-2.5 overflow-x-auto scrollbar-none flex-1">
+        {NAV_ITEMS.map((item) => (
+          <button
+            key={item.mode}
+            onClick={() => onNavigate(item.mode)}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200 cursor-pointer
+              backdrop-blur-sm shrink-0
+              ${activeMode === item.mode
+                ? 'bg-white/70 text-rose-700 shadow-md'
+                : 'bg-white/30 text-stone-600 hover:text-rose-600 hover:bg-white/50 hover:shadow-sm'
+              }`}
+          >
+            <span className="inline mr-0.5">{item.icon}</span>
+            {item.label}
+          </button>
+        ))}
+      </div>
     </nav>
   )
 }

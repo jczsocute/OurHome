@@ -14,9 +14,21 @@ const INITIAL_DRAWER: DrawerState = {
 export default function App() {
   const [drawer, setDrawer] = useState<DrawerState>(INITIAL_DRAWER)
   const [messages, setMessages] = useState<Message[]>([])
+  const [appHeight, setAppHeight] = useState<number>(0)
 
   useEffect(() => {
     fetchMessages().then(setMessages)
+  }, [])
+
+  useEffect(() => {
+    const update = () => setAppHeight(window.innerHeight)
+    update()
+    window.addEventListener('resize', update)
+    window.addEventListener('orientationchange', update)
+    return () => {
+      window.removeEventListener('resize', update)
+      window.removeEventListener('orientationchange', update)
+    }
   }, [])
 
   const addMessage = useCallback(async (name: string, content: string) => {
@@ -55,8 +67,9 @@ export default function App() {
 
   return (
     <div
-      className="relative w-screen h-screen h-dvh overflow-hidden"
+      className="relative w-screen overflow-hidden"
       style={{
+        height: appHeight ? `${appHeight}px` : '100dvh',
         background: 'linear-gradient(135deg, #FFEDE0 0%, #FDE8D8 30%, #FFF0EB 60%, #EDE0F8 100%)',
       }}
     >
