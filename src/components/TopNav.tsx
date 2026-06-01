@@ -14,8 +14,8 @@ const NAV_ITEMS: { mode: DrawerMode; label: string; icon: string }[] = [
 
 export default function TopNav({ onNavigate, activeMode }: TopNavProps) {
   return (
-    <nav className="absolute top-0 left-0 right-0 z-50 flex items-center px-4 py-3 gap-2.5">
-      <span className="text-lg mr-1">🏠</span>
+    <nav className="absolute top-0 left-0 right-0 z-50 flex items-center px-4 py-3 gap-2.5 overflow-x-auto scrollbar-none">
+      <span className="text-lg mr-1 shrink-0">🏠</span>
       {NAV_ITEMS.map((item) => (
         <button
           key={item.mode}

@@ -48,25 +48,25 @@ export default function SideDrawer({
       `}
     >
       <div className="relative h-full md:rounded-l-3xl max-md:rounded-t-3xl glass shadow-2xl overflow-hidden border border-white/30">
-        <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
-          <span className="text-xs text-gray-400 hidden sm:inline">
-            {mode === 'furniture' ? relatedObject : ''}
-          </span>
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              onClose()
-            }}
-            className="w-8 h-8 rounded-full bg-white/60 hover:bg-white/90 flex items-center justify-center text-gray-500 hover:text-gray-800 transition-all shadow cursor-pointer"
-            title="关闭面板"
-          >
-            ✕
-          </button>
-        </div>
-
         <div className="h-full overflow-y-auto p-6 pt-14">
           {renderContent()}
         </div>
+      </div>
+
+      <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
+        <span className="text-xs text-gray-400 hidden sm:inline">
+          {mode === 'furniture' ? relatedObject : ''}
+        </span>
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            onClose()
+          }}
+          className="w-8 h-8 rounded-full bg-white/60 hover:bg-white/90 flex items-center justify-center text-gray-500 hover:text-gray-800 transition-all shadow cursor-pointer"
+          title="关闭面板"
+        >
+          ✕
+        </button>
       </div>
     </div>
   )

@@ -21,9 +21,19 @@ body {
 #root {
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   max-width: 100%;
   margin: 0;
   text-align: left;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes float {

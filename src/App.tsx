@@ -55,7 +55,7 @@ export default function App() {
 
   return (
     <div
-      className="relative w-screen h-screen overflow-hidden"
+      className="relative w-screen h-screen h-dvh overflow-hidden"
       style={{
         background: 'linear-gradient(135deg, #FFEDE0 0%, #FDE8D8 30%, #FFF0EB 60%, #EDE0F8 100%)',
       }}
@@ -65,7 +65,7 @@ export default function App() {
         activeMode={drawer.open ? drawer.mode : null}
       />
 
-      <div className="w-full h-full pt-14 pb-2 px-2">
+      <div className="w-full h-full pt-12 pb-1 px-1 sm:pt-14 sm:pb-2 sm:px-2">
         <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-white/20">
           <HomeMap
             onFurnitureClick={handleFurnitureClick}
