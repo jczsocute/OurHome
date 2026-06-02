@@ -90,7 +90,7 @@ export default function DiaryPanel({ filterObject }: DiaryPanelProps) {
         {!loading && filtered.length === 0 && (
           <p className="text-sm text-gray-400 text-center py-8">
             {selectedTag || filterObject
-              ? '暂无相关日记，试试清除筛选条件'
+              ? '暂无相关日记'
               : '还没有日记'}
           </p>
         )}
