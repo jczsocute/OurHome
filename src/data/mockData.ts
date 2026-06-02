@@ -6,7 +6,7 @@ export const diaries: Diary[] = [
     title: '第一次一起吃砂锅粥',
     date: '2022-04-23',
     location: '宜兴',
-    tags: ['见面', '吃饭', '幸福'],
+    tags: ['美食', '第一次'],
     relatedObject: 'dining_table',
     content:
       '那天我们一起吃了砂锅粥，热气一直往上冒。你帮我吹凉，说慢慢吃。现在想起来，还是觉得很温暖。那家店后来成了我们经常去的地方。',
@@ -16,7 +16,7 @@ export const diaries: Diary[] = [
     title: '一起逛超市的日常',
     date: '2022-05-15',
     location: '深圳',
-    tags: ['日常', '购物', '温馨'],
+    tags: ['日常', '宅家'],
     relatedObject: 'fridge',
     content:
       '每次去超市你都要在冰箱前站很久，纠结买什么口味的酸奶。我推着车在旁边等你，突然觉得这样的生活就是最幸福的样子。',
@@ -26,7 +26,7 @@ export const diaries: Diary[] = [
     title: '你做的第一顿饭',
     date: '2022-06-08',
     location: '深圳',
-    tags: ['做饭', '感动', '纪念'],
+    tags: ['美食', '第一次', '感动'],
     relatedObject: 'stove',
     content:
       '你第一次给我做饭，番茄炒蛋和一碗面。虽然简单，但我觉得那是世界上最好吃的饭。你一边炒菜一边抱怨油烟，但眼睛里有光。',
@@ -36,7 +36,7 @@ export const diaries: Diary[] = [
     title: '深夜一起写论文',
     date: '2022-10-20',
     location: '深圳',
-    tags: ['学习', '陪伴', '深夜'],
+    tags: ['学习', '宅家'],
     relatedObject: 'desk',
     content:
       'deadline 前一天晚上，我们在书桌前并肩坐着，你写论文，我改 PPT。键盘声和翻书声交织在一起。凌晨三点的时候你趴在我肩上睡着了，我一动也不敢动。',
@@ -46,7 +46,7 @@ export const diaries: Diary[] = [
     title: '沙发上的电影夜',
     date: '2023-02-14',
     location: '深圳',
-    tags: ['电影', '情人节', '浪漫'],
+    tags: ['宅家', '纪念日'],
     relatedObject: 'sofa',
     content:
       '情人节那天我们窝在沙发上看《怦然心动》。看到一半你问我：你觉得朱莉像不像我？我说：你比她可爱多了。你笑着把爆米花塞到我嘴里。',
@@ -56,7 +56,7 @@ export const diaries: Diary[] = [
     title: '第一次吵架和好',
     date: '2023-05-10',
     location: '深圳',
-    tags: ['吵架', '成长', '包容'],
+    tags: ['成长', '感动'],
     relatedObject: 'bed',
     content:
       '因为一件小事吵了架，各自背对着躺在床上。过了十分钟，你突然转过身说：我们不要吵架了好不好。我抱住你，觉得这辈子就是你了。',
@@ -66,7 +66,7 @@ export const diaries: Diary[] = [
     title: '一起去海边',
     date: '2023-07-28',
     location: '惠州',
-    tags: ['旅行', '海边', '浪漫'],
+    tags: ['旅行', '约会'],
     relatedObject: 'bathtub',
     content:
       '在海边玩了一整天，回来泡澡的时候你说：下次我们还去看海好不好。我说好，每年都去。你伸出手指和我拉勾，浴室里都是笑声。',
@@ -76,7 +76,7 @@ export const diaries: Diary[] = [
     title: '你洗衣服的样子',
     date: '2024-01-15',
     location: '深圳',
-    tags: ['日常', '家务', '可爱'],
+    tags: ['日常', '宅家'],
     relatedObject: 'washing_machine',
     content:
       '你第一次用洗衣机，研究了半天按钮。我说我来教你，你说不要，你要自己学会。后来每次洗衣服你都特别骄傲地告诉我今天洗的是什么模式。',
@@ -86,7 +86,7 @@ export const diaries: Diary[] = [
     title: '留言墙上的温暖',
     date: '2024-06-01',
     location: '深圳',
-    tags: ['日常', '浪漫', '惊喜'],
+    tags: ['日常', '感动'],
     relatedObject: 'message_wall',
     content:
       '有一天回家，发现你在留言墙上贴了一张便利贴，上面写着：今天也很爱你。从那以后，我们的留言墙越来越满，每一张都是我们之间的秘密。',
@@ -96,7 +96,7 @@ export const diaries: Diary[] = [
     title: '第一次一起跨年',
     date: '2024-12-31',
     location: '深圳',
-    tags: ['跨年', '纪念', '幸福'],
+    tags: ['纪念日', '第一次'],
     relatedObject: 'sofa',
     content:
       '零点的时候外面放起了烟花，我们坐在沙发上透过窗户看。你说新的一年也要一起。我说以后的每一年都要。你靠在我肩上，那一刻什么都刚刚好。',
