@@ -20,6 +20,7 @@ export interface Message {
   name: string
   content: string
   createdAt: string
+  author?: 'visitor' | 'boy' | 'girl'
 }
 
 export interface FurnitureItem {

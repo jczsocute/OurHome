@@ -147,17 +147,20 @@ export const defaultMessages: Message[] = [
     name: '路过的朋友',
     content: '祝你们一直幸福下去！',
     createdAt: '2026-05-31',
+    author: 'visitor',
   },
   {
     id: 'm2',
     name: '小猫咪',
     content: '喵~ 在这个家感觉很温暖呢',
     createdAt: '2026-05-30',
+    author: 'visitor',
   },
   {
     id: 'm3',
     name: '天上的星星',
     content: '每次看到你们我都会发光',
     createdAt: '2026-05-29',
+    author: 'visitor',
   },
 ]

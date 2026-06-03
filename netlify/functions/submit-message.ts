@@ -90,8 +90,8 @@ export default async function handler(req: Request): Promise<Response> {
 
   const { data, error } = await supabase
     .from('messages')
-    .insert({ name: name || '匿名', content, status: 'approved' })
-    .select('id, name, content, created_at')
+    .insert({ name: name || '匿名', content, status: 'approved', author: 'visitor' })
+    .select('id, name, content, created_at, author')
     .single()
 
   if (error) {
@@ -107,6 +107,7 @@ export default async function handler(req: Request): Promise<Response> {
       name: data.name,
       content: data.content,
       createdAt: (data.created_at as string)?.slice(0, 10) || '',
+      author: data.author || 'visitor',
     }),
     {
       status: 200,

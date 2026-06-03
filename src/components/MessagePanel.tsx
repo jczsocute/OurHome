@@ -69,22 +69,41 @@ export default function MessagePanel({ messages, onAdd }: MessagePanelProps) {
             还没有留言，来做第一个留言的人吧~
           </p>
         )}
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className="bg-white/70 rounded-xl p-3.5 border border-teal-50 shadow-sm"
-          >
-            <div className="flex items-center justify-between mb-1">
-              <span className="font-semibold text-gray-700 text-sm">
-                {msg.name}
-              </span>
-              <span className="text-xs text-gray-400">{msg.createdAt}</span>
+        {messages.map((msg) => {
+          const author = msg.author || 'visitor'
+          const isBoy = author === 'boy'
+          const isGirl = author === 'girl'
+          const cardStyle = isBoy
+            ? 'bg-blue-50/80 border-blue-200/60 shadow-sm'
+            : isGirl
+              ? 'bg-pink-50/80 border-pink-200/60 shadow-sm'
+              : 'bg-white/70 border-teal-50 shadow-sm'
+          const authorBadge = isBoy
+            ? '💙'
+            : isGirl
+              ? '💖'
+              : null
+
+          return (
+            <div
+              key={msg.id}
+              className={`rounded-xl p-3.5 border ${cardStyle}`}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-semibold text-gray-700 text-sm flex items-center gap-1.5">
+                  {msg.name}
+                  {authorBadge && (
+                    <span className="text-xs">{authorBadge}</span>
+                  )}
+                </span>
+                <span className="text-xs text-gray-400">{msg.createdAt}</span>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {msg.content}
+              </p>
             </div>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              {msg.content}
-            </p>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

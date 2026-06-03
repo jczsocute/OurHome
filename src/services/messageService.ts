@@ -40,6 +40,7 @@ export async function fetchMessages(): Promise<Message[]> {
     name: row.name as string,
     content: row.content as string,
     createdAt: (row.created_at as string)?.slice(0, 10) || '',
+    author: ((row.author as string) || 'visitor') as Message['author'],
   }))
 }
 
@@ -51,6 +52,7 @@ export async function addMessage(name: string, content: string): Promise<Message
       name: name.trim() || '匿名',
       content: content.trim(),
       createdAt: new Date().toISOString().slice(0, 10),
+      author: 'visitor',
     }
     msgs.unshift(newMsg)
     saveLocalFallback(msgs)
@@ -84,7 +86,7 @@ export async function addMessage(name: string, content: string): Promise<Message
 
     const { data, error } = await supabase
       .from('messages')
-      .insert({ name: name.trim() || '匿名', content: content.trim() })
+      .insert({ name: name.trim() || '匿名', content: content.trim(), author: 'visitor' })
       .select()
       .single()
 
@@ -96,6 +98,7 @@ export async function addMessage(name: string, content: string): Promise<Message
         name: name.trim() || '匿名',
         content: content.trim(),
         createdAt: new Date().toISOString().slice(0, 10),
+        author: 'visitor',
       }
       msgs.unshift(newMsg)
       saveLocalFallback(msgs)
@@ -107,6 +110,7 @@ export async function addMessage(name: string, content: string): Promise<Message
       name: data.name as string,
       content: data.content as string,
       createdAt: (data.created_at as string)?.slice(0, 10) || '',
+      author: ((data.author as string) || 'visitor') as Message['author'],
     }
   }
 }

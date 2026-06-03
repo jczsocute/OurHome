@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS messages (
   name TEXT NOT NULL DEFAULT '匿名',
   content TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+  author TEXT NOT NULL DEFAULT 'visitor' CHECK (author IN ('visitor', 'boy', 'girl')),
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
